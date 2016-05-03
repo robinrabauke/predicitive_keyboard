@@ -8,9 +8,7 @@
 
 
 %outsourcing the database:
-:- use_module(word).
 :- use_module(transition).
-%:- use_module(state).
 :- use_module(specialstate).  
 :- use_module(element_at).
 

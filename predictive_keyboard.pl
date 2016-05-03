@@ -11,17 +11,20 @@
 :- use_module(transition).
 :- use_module(specialstate).  
 :- use_module(element_at).
-
+%:- use_module(choose_prob_word).
 %start the program and generate 10(variable) random sentences
 main :- make_transition(20).
+%main :- nextWord(start).
+
 
 decrement(X,X1) :-
 	X1 is X - 1.
 
 make_transition(0).
 make_transition(N) :-
-		random_transition(start),
+		nextWord(start),
 		decrement(N,N1),
+		writef('%t\n',['']),
 		make_transition(N1).
 	
 
@@ -81,4 +84,44 @@ random_transition(State) :-
 		%recursive progression on randomly chosen State	
 		random_transition(FutureState).
 						
-						
+
+nextWord(start) :-
+
+	transition(Word, WordList, ProbList),
+	choose_by_prob(Word, WordList, ProbList).				
+	
+
+
+nextWord(Word) :-
+	endstate(Word);
+
+	
+	transition(Word, WordList, ProbList),
+	choose_by_prob(Word, WordList, ProbList).				
+
+
+
+choose_by_prob(Word, [FirstWord|WordList], [FirstProb|ProbList]) :-
+	%get the List of Words an Probabilities
+	
+	% word_1 = 0,7
+	% word_2 = 0,2
+	% word_3 = 0.1
+	% we generate a random-number between 0 and 1 and test it agains the
+	% the Probabilities. If it's smaller, the word will be the next one.
+	%
+	(random(X),
+	X < FirstProb,
+	writef('%t\t', [FirstWord]),
+	nextWord(FirstWord));
+
+	%failed, let's go on.
+	%writef('%t', ["we failed"]),
+	choose_by_prob(Word, WordList, ProbList).
+
+
+choose_by_prob(Word, [], []) :-
+	endstate(Word),
+	
+	%writef('%t\n', [Word]);
+	writef('%t\n', [" end"]).

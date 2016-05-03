@@ -11,18 +11,18 @@
 :- use_module(word).
 :- use_module(transition).
 %:- use_module(state).
-:- use_module(specialstate).
+:- use_module(specialstate).  
 :- use_module(element_at).
 
 %start the program and generate 10(variable) random sentences
-main :- make_transition(25).
+main :- make_transition(20).
 
 decrement(X,X1) :-
 	X1 is X - 1.
 
 make_transition(0).
 make_transition(N) :-
-		random_transition(0),
+		random_transition(start),
 		decrement(N,N1),
 		make_transition(N1).
 	
@@ -35,24 +35,12 @@ make_transition(N) :-
 * TODO: should work on lists of transitions! -done!
 * TODO: remove the pseudo-probability and use real probabilites.
 */
-
-%exit
-random_transition(State) :-
-		%current State is a endstate 
-		endstate(State),
-
-		%print the word:
-		word(State, Word),
-		writef('%t\n', [Word]).
-		%DONE!
-						
-
 %start
-random_transition(0) :-
-		%dont print the first word!
+random_transition(start) :-
+		%dont print the first word, because it's "start"
 
 		%get the possible transitions
-		transition(0, State_List, _Probability),
+		transition(start, State_List, _Probability),
 
 		%choose a random element from the possbile transitions
 		length(State_List, Length),
@@ -64,11 +52,23 @@ random_transition(0) :-
 
 
 
+%exit
+random_transition(State) :-
+		%current State is a endstate 
+		endstate(State),
+
+		%print the word:
+		%word(State, Word),
+		writef('%t\n', [State]).
+		
+		%done
+						
+
+
 %random_transition with probability
 random_transition(State) :- 	
 		%print the word
-		word(State, Word),
-		writef('%t\t', [Word]),
+		%word(State, Word),
 
 		%get the list of possible transitions
 		transition(State, State_List, _Probability),
@@ -79,6 +79,7 @@ random_transition(State) :-
 		random_between(1, Length, RandomState),
 		element_at(FutureState, State_List, RandomState),
 				
+		writef('%t\t', [State]),
 		%recursive progression on randomly chosen State	
 		random_transition(FutureState).
 						

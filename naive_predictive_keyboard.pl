@@ -13,6 +13,7 @@
 :- use_module(element_at).
 %:- use_module(choose_prob_word).
 %start the program and generate 10(variable) random sentences
+%TODO: make it run N times!
 main :- make_transition(20).
 %main :- nextWord(start).
 

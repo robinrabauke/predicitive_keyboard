@@ -6,12 +6,14 @@
 */
 
 
-%outsourcing the database:
+%outsourcing the database:http://cs.union.edu/~striegnk/learn-prolog-now/html/node101.html
 :- use_module(transition).
 :- use_module(specialstate).  
-:- use_module(element_at).
-%:- use_module(choose_prob_word).
+%:- use_module(element_at).
+%:- use_module(cichhoose_prob_word).
 %start the program and generate 10(variable) random sentences
+
+
 main :- make_transition(20).
 %main :- nextWord(start).
 
@@ -37,8 +39,6 @@ nextWord(start) :-
 
 nextWord(Word) :-
 	endstate(Word);
-
-	
 	transition(Word, WordList, ProbList),
 	choose_by_prob(Word, WordList, ProbList).				
 

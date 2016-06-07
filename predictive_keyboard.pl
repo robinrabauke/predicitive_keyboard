@@ -7,7 +7,7 @@
 
 
 main :- 
-	make_transition(1000).
+	make_transition(20).
 %	getTransitions(du).
 
 

@@ -13,6 +13,6 @@ You will need SWI-Prolog to run it:
 
 In the swipl-console you just run:
 
-`main(N).`
+`main.`
 
-and it creates N sentences for you.
+and it creates sentences for you.

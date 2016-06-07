@@ -10,11 +10,24 @@ choose_prob_word(Word, [Firstword|WordList], [FirstProb|ProbList], NewWord) :-
 	% the Probabilities. If it's smaller, the word will be the next one.
 	%
 	random(X),
-	X < FirstProb,
-	choose_prob_word(Word, Firstword, FirstProb);
-
+	Random < FirstProb,
+	choose_prob_word(Word, Firstword, FirstProb),!;
+	
 	%failed, go on.
-	choose_prob(Word, WordList, ProbList, NewWord).
+	NewRandom is Random + FirstProb,
+	choose_prob(Word, WordList, ProbList, NewWord, NewRandom).
+
+
+
+choose_prob_word(Word, [Firstword|WordList], [FirstProb|ProbList], NewWord, Random) :-
+	Random < FirstProb,
+	choose_prob_word(Word, Firstword, FirstProb),!;
+	
+	%failed, go on.
+	NewRandom is Random + FirstProb,
+	choose_prob(Word, WordList, ProbList, NewWord, NewRandom).
+
+
 
 
 

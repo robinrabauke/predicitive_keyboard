@@ -1,21 +1,14 @@
 % %author: robinrabauke
-/* 	TODO!
-*	write some more comments
-* 	???
-* 	profit.b
-*/
 
-
-%outsourcing the database:http://cs.union.edu/~striegnk/learn-prolog-now/html/node101.html
 :- use_module(transition).
 :- use_module(specialstate).  
-%:- use_module(element_at).
-%:- use_module(cichhoose_prob_word).
-%start the program and generate 10(variable) random sentences
+
+%start the program and generate random sentences with "main."
 
 
-main :- make_transition(20).
-%main :- nextWord(start).
+main :- 
+	make_transition(1000).
+%	getTransitions(du).
 
 
 decrement(X,X1) :-
@@ -30,32 +23,61 @@ make_transition(N) :-
 	
 
 
+
+
 nextWord(start) :-
 
 	transition(Word, WordList, ProbList),
-	choose_by_prob(Word, WordList, ProbList).				
+	random(X),
+	choose_by_prob(Word, WordList, ProbList, X).				
 	
-
-
 nextWord(Word) :-
-	endstate(Word);
+	endstate(Word),!;
 	transition(Word, WordList, ProbList),
-	choose_by_prob(Word, WordList, ProbList).				
+	%comment in the next line if you want to look inside the probs while the program is running:
+	%getTransitions(Word),
+	random(X),
+	choose_by_prob(Word, WordList, ProbList,X).				
 
 
 
-choose_by_prob(Word, [FirstWord|WordList], [FirstProb|ProbList]) :-
 
-	(random(X),
-	X < FirstProb,
+
+choose_by_prob(Word, [FirstWord|WordList], [FirstProb|ProbList], X) :-
+
+	
+	(X < FirstProb,	
 	writef('%t\t \t', [FirstWord]),
 	nextWord(FirstWord));
 
 	%failed, let's go on.
-	choose_by_prob(Word, WordList, ProbList).
+	NewRandom is X - FirstProb,
+	choose_by_prob(Word, WordList, ProbList, NewRandom).
 
 
-choose_by_prob(Word, [], []) :-
-	endstate(Word),
-	
-	writef('%t\n', [" end"]).
+
+
+
+%prints the transitions of given word <Word>
+getTransitions(Word) :-
+	transition(Word,WordList, ProbList),
+
+	write("Current word is: <"),
+	write(Word),
+	write("> possible next words are: "),nl,
+
+	printTransitions(WordList, ProbList);
+	write("no entry for "),
+	write(Word).
+
+
+%pretty print the possible transitions 
+printTransitions([], []).
+printTransitions([CurrentWord|RestWordList], [CurrentProb|RestProblist]):-
+	write(CurrentWord),
+	write(" \t with probability: \t"),
+	write(CurrentProb),nl,
+	printTransitions(RestWordList, RestProblist).
+
+
+
